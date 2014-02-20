@@ -16,19 +16,22 @@
 				<tbody>
 
 					<tr>
-						<td>Object:</td>
-						<td colspan="2"><input class="focus" type="text" name="object" placeholder="Object"></td>
+						<td>Salutation:</td>
+						<td colspan="2">
+							<select name="salutation">
+								<option value="mr">Mr.</option>
+								<option value="ms">Ms.</option>
+								<option value="_SPECIFY">Specify</option>
+							</select>
+							<input type="text" name="salutation"
+								data-ns-enable="select[name=salutation]" data-ns-value="option[value=_SPECIFY]">
+						</td>
 					</tr>
 
 					<tr>
-						<td>Library:</td>
+						<td>Name:</td>
 						<td colspan="2">
-							<select name="library">
-								<option value="QSYS">QSYS</option>
-								<option value="_SPECIFY">Specify</option>
-							</select>
-							<input type="text" name="library"
-								data-ns-enable="select[name=library]" data-ns-value="option[value=_SPECIFY]">
+							<input type="text" name="name" placeholder="Name" ns-focus>
 						</td>
 					</tr>
 
@@ -70,16 +73,16 @@
 					</tr>
 
 					<tr>
-						<td>Replication Spool Files:</td>
+						<td>Radio buttons:</td>
 						<td colspan="2">
 							<label>
-								<input type="radio" name="replicateSpool" value="*YES" checked
+								<input type="radio" name="radio" value="*YES" checked
 									data-ns-enable="[name=type]"
 									data-ns-value="[value=*ALL]">
 								Yes
 							</label>
 							<label>
-								<input type="radio" name="replicateSpool" value="*NO"
+								<input type="radio" name="radio" value="*NO"
 									data-ns-enable="[name=type]"
 									data-ns-value="[value=*ALL]">
 								No
@@ -88,13 +91,13 @@
 					</tr>
 
 					<tr>
-						<td>Temporary Files:</td>
+						<td>Selector 2:</td>
 						<td colspan="2">
-							<select name="temporaryFiles"
-									data-ns-enable="[name=replicateSpool]"
-									data-ns-value="[value=*YES]:checked">
-								<option value="source">Source Only</option>
-								<option value="all">Source and Target</option>
+							<select name="select2"
+									data-ns-enable="[name=radio]"
+									data-ns-value="[value=*YES]">
+								<option value="foo">Foo</option>
+								<option value="bar">Bar</option>
 							</select>
 						</td>
 					</tr>
@@ -104,8 +107,8 @@
 						<td>
 							<label>
 								<input type="radio" name="daysOfWeek" value="business" checked
-									data-ns-enable="[name=replicateSpool]"
-									data-ns-value="[value=*YES]:checked">
+									data-ns-enable="[name=radio]"
+									data-ns-value="[value=*YES]">
 								Business days
 							</label>
 						</td>
@@ -113,8 +116,8 @@
 						<td>
 							 <label>
 								<input type="radio" name="daysOfWeek" value="specified"
-									data-ns-enable="[name=replicateSpool]"
-									data-ns-value="[value=*YES]:checked">
+									data-ns-enable="[name=radio]"
+									data-ns-value="[value=*YES]">
 								Select days
 							</label>
 						</td>

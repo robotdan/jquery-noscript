@@ -158,6 +158,9 @@
 				}
 			});
 		});
+
+		// Set focus
+		container.find( "[ns-focus]" ).filter( ":first" ).focus();
 	};
 
 }( jQuery ));

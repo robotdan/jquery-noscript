@@ -5,146 +5,181 @@
 	<title>noscript demo</title>
 	<script src="http://code.jquery.com/jquery-1.10.2.js"></script>
 	<script src="http://code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
-    <link rel="stylesheet" href="http://code.jquery.com/ui/1.10.4/themes/smoothness/jquery-ui.css">
+	<link rel="stylesheet" href="http://code.jquery.com/ui/1.10.4/themes/smoothness/jquery-ui.css">
+	<link rel="stylesheet" href="noscript.css">
 	<script src="noscript.js"></script>
 </head>
 
 	<body>
 		<form noscript>
+			<table>
+				<tbody>
+					<tr>
+						<td>Object:</td>
+						<td colspan="2"><input class="focus" type="text" name="object" placeholder="Object"></td>
+					</tr>
+					<tr>
+						<td>Library:</td>
+						<td colspan="2">
+							<select name="library">
+								<option value="QSYS">QSYS</option>
+								<option value="_SPECIFY">Specify</option>
+							</select>
+							<input type="text" name="library"
+								data-ns-enable="select[name=library]" data-ns-value="option[value=_SPECIFY]">
+						</td>
+					</tr>
+					<tr>
+						<td>Type:</td>
+						<td colspan="2">
+							<select name="type" >
+								<option value="*ALL">All</option>
+								<option value="*DEVD">*DEVD</option>
+								<option value="*FILE">*FILE</option>
+								<option value="*LIB">*LIB</option>
+								<option value="*DTAARA">*DTAARA</option>
+							</select>
+							<select name="attributes"
+									data-ns-enable="[name=type]"
+									data-ns-value=":not([value=*ALL],[value$=LIB],[value$=DEVD],[value=*DTAARA])">
+								<option value="PF">PF</option>
+								<option value="LF">LF</option>
+							</select>
 
-		    <table>
-		        <tbody>
-		            <tr>
-		                <td>Object:</td>
-		                <td colspan="2"><input class="focus" type="text" name="object" placeholder="Object"></td>
-		            </tr>
-		            <tr>
-		                <td>Library:</td>
-		                <td colspan="2">
-		                    <select name="library">
-		                        <option value="QSYS">QSYS</option>
-		                        <option value="_SPECIFY">Specify</option>
-		                    </select>
-		                    <input type="text" name="library" placeholder="Specify library" data-enable-on-trigger="select[name=library]" data-value="option[value=_SPECIFY]:selected">
-		                </td>
-		            </tr>
-		            <tr>
-		                <td>Type:</td>
-		                <td colspan="2">
-		                    <select name="type" >
-		                        <option value="*ALL">All</option>
-		                        <option value="*DEVD">*DEVD</option>
-		                        <option value="*FILE">*FILE</option>
-		                        <option value="*LIB">*LIB</option>
-		                        <option value="*DTAARA">*DTAARA</option>
-		                    </select>
-		                    <select name="attributes" data-enable-on-trigger="[name=type]" data-value=":not([value=*ALL]:selected,[value$=LIB]:selected,[value$=DEVD]:selected,[value=*DTAARA]:selected)">
-		                        <option value="PF">PF</option>
-		                        <option value="LF">LF</option>
-		                    </select>
+							<select name="devdAttributes"
+									data-ns-enable="[name=type]"
+									data-ns-show="[name=type]"
+									data-ns-value="[value=*DEVD]">
+								<option value="*NWSD">*NWSD</option>
+								<option value="*DSPD">*DSPD</option>
+							</select>
 
-		                    <select name="devdAttributes" data-enable-on-trigger="[name=type]" data-show-on-trigger="[name=type]" data-value="[value=*DEVD]:selected">
-		                        <option value="*NWSD">*NWSD</option>
-		                        <option value="*DSPD">*DSPD</option>
-		                    </select>
+							<select name="libAttributes"
+									data-ns-enable="[name=type]"
+									data-ns-show="[name=type]"
+									data-ns-value="[value=*LIB]">
+								<option value="*LIB">*LIB</option>
+							</select>
 
-		                    <select name="libAttributes" data-enable-on-trigger="[name=type]" data-show-on-trigger="[name=type]" data-value="[value=*LIB]:selected">
-		                        <option value="*LIB">*LIB</option>
-		                    </select>
+						</td>
+					</tr>
+					<tr>
+						<td>Replication Spool Files:</td>
+						<td colspan="2">
+							<label>
+								<input type="radio" name="replicateSpool" value="*YES" checked
+									data-ns-enable="[name=type]"
+									data-ns-value="[value=*ALL]">
+								Yes
+							</label>
+							<label>
+								<input type="radio" name="replicateSpool" value="*NO"
+									data-ns-enable="[name=type]"
+									data-ns-value="[value=*ALL]">
+								No
+							</label>
+						</td>
+					</tr>
+					<tr>
+						<td>Temporary Files:</td>
+						<td colspan="2">
+							<select name="temporaryFiles"
+									data-ns-enable="[name=replicateSpool]"
+									data-ns-value="[value=*YES]:checked">
+								<option value="source">Source Only</option>
+								<option value="all">Source and Target</option>
+							</select>
+						</td>
+					</tr>
+					<tr>
+						<td>Days of the week:</td>
+						<td>
+							<label>
+								<input type="radio" name="daysOfWeek" value="business" checked
+									data-ns-enable="[name=replicateSpool]"
+									data-ns-value="[value=*YES]:checked">
+								Business days
+							</label>
+						</td>
+						<td>
+							 <label>
+								<input type="radio" name="daysOfWeek" value="specified"
+									data-ns-enable="[name=replicateSpool]"
+									data-ns-value="[value=*YES]:checked">
+								Select days
+							</label>
+						</td>
+					</tr>
+					<tr>
+						<td colspan="2"></td>
+						<td data-ns-enable="[name=daysOfWeek]" data-ns-value="[value=specified]">
+							<ul>
+								<li>
+									<label>
+										<input type="checkbox" name="day" value="sunday"
+											data-ns-enable="[name=daysOfWeek]"
+											data-ns-value="[value=specified]">
+										Sunday
+									</label>
+								</li>
+								<li>
+									<label>
+										<input type="checkbox" name="day" value="monday"
+											data-ns-enable="[name=daysOfWeek]"
+											data-ns-value="[value=specified]">
+										Monday
+									</label>
+								</li>
+								<li>
+									<label>
+										<input type="checkbox" name="day" value="tuesday"
+											data-ns-enable="[name=daysOfWeek]"
+											data-ns-value="[value=specified]">
+										Tuesday
+									</label>
+								</li>
+								<li>
+									<label>
+										<input type="checkbox" name="day" value="wednesday"
+											data-ns-enable="[name=daysOfWeek]"
+											data-ns-value="[value=specified]">
+										Wednesday
+									</label>
+								</li>
+								<li>
+									<label>
+										<input type="checkbox" name="day" value="thursday"
+											data-ns-enable="[name=daysOfWeek]"
+											data-ns-value="[value=specified]">
+										Thursday
+									</label>
+								</li>
+								<li>
+									<label>
+										<input type="checkbox" name="day" value="friday"
+											data-ns-enable="[name=daysOfWeek]"
+											data-ns-value="[value=specified]">
+										Friday
+									</label>
+								</li>
+								<li>
+									<label>
+										<input type="checkbox" name="day" value="saturday"
+											data-ns-enable="[name=daysOfWeek]"
+											data-ns-value="[value=specified]">
+										Saturday
+									</label>
+								</li>
+							</ul>
 
-		                </td>
-		            </tr>
-		            <tr>
-		                <td>Replication Spool Files:</td>
-		                <td colspan="2">
-		                        <label>
-									<input type="radio" name="replicateSpool" value="*YES" checked data-enable-on-trigger="[name=type]" data-value="[value=*ALL]:selected"> Yes </label>
-		                    
-		                        <label><input type="radio" name="replicateSpool" value="*NO" data-enable-on-trigger="[name=type]" data-value="[value=*ALL]:selected"> No </label>
-		                </td>
-		            </tr>
-		            <tr>
-		                <td>Temporary Files:</td>
-		                <td colspan="2">
-		                    <select name="temporaryFiles" data-enable-on-trigger="[name=replicateSpool]" data-value="[value=*YES]:checked">
-		                        <option value="source">Source Only</option>
-		                        <option value="all">Source and Target</option>
-		                    </select>
-		                </td>
-		            </tr>
-		            <tr>
-		                <td>Days of the week:</td>
-		                <td>
-		                    <label>
-		                        <input type="radio" name="daysOfWeek" value="business" checked data-enable-on-trigger="[name=replicateSpool]" data-value="[value=*YES]:checked">
-		                        Business days
-		                    </label>
-		                </td>
-		                <td>
-		                     <label>
-		                        <input type="radio" name="daysOfWeek" value="selected" data-enable-on-trigger="[name=replicateSpool]" data-value="[value=*YES]:checked">
-		                        Select days
-		                    </label>
-		                </td>
-		            </tr>
-		            <tr>
-		                <td></td>
-		                <td></td>
-		                <td>
-		                    <ul>
-		                        <li>
-		                            <label>
-		                                <input type="checkbox" name="day" value="monday" data-enable-on-trigger="[name=daysOfWeek]" data-value="[value=selected]:checked">
-		                                Sunday
-		                            </label>
-		                        </li>
-		                        <li>
-		                            <label>
-		                                <input type="checkbox" name="day" value="monday" data-enable-on-trigger="[name=daysOfWeek]" data-value="[value=selected]:checked">
-		                                    Monday
-		                            </label>
+						</td>
+					</tr>
 
-		                        </li>
-		                        <li>
-		                            <label>
-		                                <input type="checkbox" name="day" value="monday" data-enable-on-trigger="[name=daysOfWeek]" data-value="[value=selected]:checked">
-		                                    Tuesday
-		                            </label>
-		                        </li>
-		                        <li>
-		                            <label>
-		                                <input type="checkbox" name="day" value="monday" data-enable-on-trigger="[name=daysOfWeek]" data-value="[value=selected]:checked">
-		                                    Wednesday
-		                            </label>
-		                        </li>
-		                        <li>
-		                            <label>
-		                                <input type="checkbox" name="day" value="monday" data-enable-on-trigger="[name=daysOfWeek]" data-value="[value=selected]:checked">
-		                                    Thursday
-		                            </label>
-		                        </li>
-		                        <li>
-		                            <label>
-		                                <input type="checkbox" name="day" value="monday" data-enable-on-trigger="[name=daysOfWeek]" data-value="[value=selected]:checked">
-		                                    Friday
-		                            </label>
-		                        </li>
-		                        <li>
-		                            <label>
-		                                <input type="checkbox" name="day" value="monday" data-enable-on-trigger="[name=daysOfWeek]" data-value="[value=selected]:checked">
-		                                    Saturday
-		                            </label>
-		                        </li>
-		                    </ul>
+				</tbody>
+			</table>
 
-		                </td>
-		            </tr>
-
-		        </tbody>
-		    </table>
-
-	        <input type="submit" name="submit" value="Submit">
+			<input type="submit" name="submit" value="Submit">
 		</form>
 
 	</body>
-</html>
+</html

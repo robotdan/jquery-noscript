@@ -163,11 +163,11 @@
 		container.find( "[ns-focus]" ).filter( ":first" ).focus();
 	};
 
+	// Plugin is automatically initialized by adding 'noscript' to the form element.
+	// Optionally the user can manually initialize by calling $( form ).noscript();
+	$( document ).ready( function() {
+		$( "body" ).find( "form[noscript]" ).noscript();
+	});
+
 }( jQuery ));
 
-// User may initialize by calling $( "form" ).noscript()
-// - or by using the 'noscript' attribute on the form element.
-// Example: <form noscript>
-$( document ).ready( function() {
-	$( "body" ).find( "form[noscript]" ).noscript();
-});

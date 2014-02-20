@@ -14,10 +14,12 @@
 		<form noscript>
 			<table>
 				<tbody>
+
 					<tr>
 						<td>Object:</td>
 						<td colspan="2"><input class="focus" type="text" name="object" placeholder="Object"></td>
 					</tr>
+
 					<tr>
 						<td>Library:</td>
 						<td colspan="2">
@@ -29,9 +31,11 @@
 								data-ns-enable="select[name=library]" data-ns-value="option[value=_SPECIFY]">
 						</td>
 					</tr>
+
 					<tr>
 						<td>Type:</td>
 						<td colspan="2">
+
 							<select name="type" >
 								<option value="*ALL">All</option>
 								<option value="*DEVD">*DEVD</option>
@@ -39,6 +43,7 @@
 								<option value="*LIB">*LIB</option>
 								<option value="*DTAARA">*DTAARA</option>
 							</select>
+
 							<select name="attributes"
 									data-ns-enable="[name=type]"
 									data-ns-value=":not([value=*ALL],[value$=LIB],[value$=DEVD],[value=*DTAARA])">
@@ -63,6 +68,7 @@
 
 						</td>
 					</tr>
+
 					<tr>
 						<td>Replication Spool Files:</td>
 						<td colspan="2">
@@ -80,6 +86,7 @@
 							</label>
 						</td>
 					</tr>
+
 					<tr>
 						<td>Temporary Files:</td>
 						<td colspan="2">
@@ -91,6 +98,7 @@
 							</select>
 						</td>
 					</tr>
+
 					<tr>
 						<td>Days of the week:</td>
 						<td>
@@ -101,6 +109,7 @@
 								Business days
 							</label>
 						</td>
+
 						<td>
 							 <label>
 								<input type="radio" name="daysOfWeek" value="specified"
@@ -110,6 +119,7 @@
 							</label>
 						</td>
 					</tr>
+
 					<tr>
 						<td colspan="2"></td>
 						<td data-ns-enable="[name=daysOfWeek]" data-ns-value="[value=specified]">
@@ -171,15 +181,12 @@
 									</label>
 								</li>
 							</ul>
-
 						</td>
 					</tr>
 
 				</tbody>
 			</table>
-
-			<input type="submit" name="submit" value="Submit">
 		</form>
-
 	</body>
-</html
+
+</html>

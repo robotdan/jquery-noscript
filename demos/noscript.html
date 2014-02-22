@@ -36,37 +36,13 @@
 					</tr>
 
 					<tr>
-						<td>Type:</td>
+						<td>These pretzels are:</td>
 						<td colspan="2">
 
-							<select name="type" >
-								<option value="*ALL">All</option>
-								<option value="*DEVD">*DEVD</option>
-								<option value="*FILE">*FILE</option>
-								<option value="*LIB">*LIB</option>
-								<option value="*DTAARA">*DTAARA</option>
-							</select>
-
-							<select name="attributes"
-									data-ns-enable="[name=type]"
-									data-ns-value=":not([value=*ALL],[value$=LIB],[value$=DEVD],[value=*DTAARA])">
-								<option value="PF">PF</option>
-								<option value="LF">LF</option>
-							</select>
-
-							<select name="devdAttributes"
-									data-ns-enable="[name=type]"
-									data-ns-show="[name=type]"
-									data-ns-value="[value=*DEVD]">
-								<option value="*NWSD">*NWSD</option>
-								<option value="*DSPD">*DSPD</option>
-							</select>
-
-							<select name="libAttributes"
-									data-ns-enable="[name=type]"
-									data-ns-show="[name=type]"
-									data-ns-value="[value=*LIB]">
-								<option value="*LIB">*LIB</option>
+							<select name="pretzels" >
+								<option value="">Select&hellip;</option>
+								<option value="meThirsty">Making me thirsty!</option>
+								<option value="youThirsty">Making you thirsty!</option>
 							</select>
 
 						</td>
@@ -77,14 +53,14 @@
 						<td colspan="2">
 							<label>
 								<input type="radio" name="radio" value="*YES" checked
-									data-ns-enable="[name=type]"
-									data-ns-value="[value=*ALL]">
+									data-ns-enable="[name=pretzels]"
+									data-ns-value=":not([value=])">
 								Yes
 							</label>
 							<label>
 								<input type="radio" name="radio" value="*NO"
-									data-ns-enable="[name=type]"
-									data-ns-value="[value=*ALL]">
+									data-ns-enable="[name=pretzels]"
+									data-ns-value=":not([value=])">
 								No
 							</label>
 						</td>

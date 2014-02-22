@@ -17,150 +17,157 @@
  *
  *	 <input name="fred" type="text" data-ns-enable="[name=foobar]" data-ns-value="[value=foo]" >
  *
- * Released under the MIT license. See MIT-LICENSE.txt.
+ * Released under the MIT license:
+ *   http://opensource.org/licenses/mit-license.php
  *
  */
-(function ( $ ) {
+(function ( $, window, document ) {
 	
 	"use strict";
 
 	$.fn.noscript = function() {
 
-		// identify controllers by collecting the selectors from the listeners
-		var container = this.is( "form" ) ? this : this.find( "form" ),
-			controllers = {},
-			triggerTypes = [ "[data-ns-enable]", "[data-ns-show]" ],
-			toCamelCase = function(string) {
-				// [data-ns-show] --> nsShow
-				return string.substring(6, string.length - 1).replace(/([ -]+)([a-zA-Z0-9])/g, function(a,b,c) {
-					return c.toUpperCase();
-				}).replace(/-/g, "");
-			};
+		return this.each(function() {
 
-		$.each( triggerTypes, function( i, dataSelector ) {
+			var t = $ ( this );
 
-			container.find( dataSelector ).each( function() {
+			// identify controllers by collecting the selectors from the listeners
+			var container = t.is( "form" ) ? t : t.find( "form" ),
+				controllers = {},
+				triggerTypes = [ "[data-ns-enable]", "[data-ns-show]" ],
+				toCamelCase = function(string) {
+					// [data-ns-show] --> nsShow
+					return string.substring(6, string.length - 1).replace(/([ -]+)([a-zA-Z0-9])/g, function(a,b,c) {
+						return c.toUpperCase();
+					}).replace(/-/g, "");
+				};
 
-				var enableOn = toCamelCase(dataSelector),
-					onTrigger = $( this ).data( enableOn ).split( "," );
+			$.each( triggerTypes, function( i, dataSelector ) {
 
-				$.each( onTrigger, function( index, selector ) {
-					if ( !controllers[ selector ] ) {
-						controllers[ selector ] = true;
-					}
-				});
+				container.find( dataSelector ).each( function() {
+
+					var enableOn = toCamelCase(dataSelector),
+						onTrigger = $( this ).data( enableOn ).split( "," );
+
+					$.each( onTrigger, function( index, selector ) {
+						if ( !controllers[ selector ] ) {
+							controllers[ selector ] = true;
+						}
+					});
 			
+				});
 			});
-		});
 
-		// Bind change event on all select, checkbox and radio controls
-		container.on( "change", "select, input[type=checkbox], input[type=radio]", function( event ) {
+			// Bind change event on all select, checkbox and radio controls
+			container.on( "change", "select, input[type=checkbox], input[type=radio]", function( event ) {
 
-			var originator = $( event.currentTarget ),
-				changedListeners = [];
+				var originator = $( event.currentTarget ),
+					changedListeners = [];
 
-			// Handle enable/disable
-			container.find( "[data-ns-enable]" ).each( function() {
+				// Handle enable/disable
+				container.find( "[data-ns-enable]" ).each( function() {
 
-				$( this ).each( function() {
+					$( this ).each( function() {
 				
+						var listener = $( this ),
+							data = listener.data();
+
+						// Is the listener interested in this controller
+						if ( originator.is( data.nsEnable ) ) {
+
+							// Set default listener state to disabled.
+							var selector = data.nsValue,
+								disable = true;
+
+							// If the originator is disabled, the listener should be as well.
+							if ( !originator.prop( "disabled" ) ) {
+								// When originator is select, match on the selected option.
+								if ( originator.is( "select" ) ) {
+									disable = !originator.find( "option:selected" ).is( selector );
+								} else {
+									disable = !originator.is( selector );
+								}
+							}
+
+							var addToChangedListeners = true;
+							if ( listener.is( "tr, td" ) ) {
+								listener.toggleClass( "ns-disabled", disable );
+							} else {
+								// Don't fire a change event for an unchecked radio button
+								addToChangedListeners = !listener.is( "[type=radio]" ) || listener.prop( "checked" );
+								listener.prop( "disabled", disable );
+							}
+
+							if ( addToChangedListeners ) {
+								// If this listener is also a controller, keep track so we can trigger a change event
+								$.each( controllers, function( selector ) {
+									if ( listener.is( selector )) {
+										changedListeners.push( listener );
+										return false; // break
+									}
+								});
+							}
+						}
+					});
+				});
+
+				// Handle show/hide
+				container.find( "[data-ns-show]" ).each( function() {
+			
 					var listener = $( this ),
 						data = listener.data();
 
-					// Is the listener interested in this controller
-					if ( originator.is( data.nsEnable ) ) {
+					if ( originator.is( data.nsShow ) ) {
 
-						// Set default listener state to disabled.
 						var selector = data.nsValue,
-							disable = true;
+							hide = true;
 
 						// If the originator is disabled, the listener should be as well.
 						if ( !originator.prop( "disabled" ) ) {
-							// When originator is select, match on the selected option.
 							if ( originator.is( "select" ) ) {
-								disable = !originator.find( "option:selected" ).is( selector );
+								// Match on the selected option: <select> --> <option selected>value</option>
+								hide = !originator.find( "option:selected" ).is( selector );
 							} else {
-								disable = !originator.is( selector );
+								hide = !originator.is( selector );
 							}
 						}
 
-						var addToChangedListeners = true;
-						if ( listener.is( "tr, td" ) ) {
-							listener.toggleClass( "ns-disabled", disable );
+						if ( hide ) {
+							listener.hide();
 						} else {
-							// Don't fire a change event for an unchecked radio button
-							addToChangedListeners = !listener.is( "[type=radio]" ) || listener.prop( "checked" );
-							listener.prop( "disabled", disable );
+							listener.show();
 						}
+					}
+				});
 
-						if ( addToChangedListeners ) {
-							// If this listener is also a controller, keep track so we can trigger a change event
-							$.each( controllers, function( selector ) {
-								if ( listener.is( selector )) {
-									changedListeners.push( listener );
-									return false; // break
-								}
-							});
+				// At the end of the event fire any controlling listeners
+				$.each( changedListeners, function( index, listener ) {
+					$( listener ).change();
+				});
+
+			});
+
+			// Fire controllers on init to set initial state
+			$.each( controllers, function( selector ) {
+				// Further iterate on these, a selector for a radio may have more than one match.
+				container.find( selector ).each( function() {
+					var t = $( this );
+					if ( !t.prop( "disabled" ) ) {
+						if ( t.is( "[type=radio]" ) ) {
+							if ( t.is( ":checked" ) ) {
+								t.change();
+							}
+						} else {
+							t.change();
 						}
 					}
 				});
 			});
 
-			// Handle show/hide
-			container.find( "[data-ns-show]" ).each( function() {
-			
-				var listener = $( this ),
-					data = listener.data();
-
-				if ( originator.is( data.nsShow ) ) {
-
-					var selector = data.nsValue,
-						hide = true;
-
-					// If the originator is disabled, the listener should be hidden regardless of the value
-					if ( !originator.prop( "disabled" ) ) {
-						if ( originator.is( "select" ) ) {
-							// Match on the selected option: <select> --> <option selected>value</option>
-							hide = !originator.find( "option:selected" ).is( selector );
-						} else {
-							hide = !originator.is( selector );
-						}
-					}
-
-					if ( hide ) {
-						listener.hide();
-					} else {
-						listener.show();
-					}
-				}
-			});
-
-			// At the end of the event fire any controlling listeners
-			$.each( changedListeners, function( index, listener ) {
-				$( listener ).change();
-			});
-
+			// Handle setting focus for first match of ns-focus
+			container.find( "[ns-focus]" ).filter( ":first" ).focus();
 		});
 
-		// Fire controllers on init to set initial state
-		$.each( controllers, function( selector ) {
-			// Further iterate on these, a selector for a radio may have more than one match.
-			container.find( selector ).each( function() {
-				var t = $( this );
-				if ( !t.prop( "disabled" ) ) {
-					if ( t.is( "[type=radio]" ) ) {
-						if ( t.is( ":checked" ) ) {
-							t.change();
-						}
-					} else {
-						t.change();
-					}
-				}
-			});
-		});
-
-		// Handle setting focus for first match of ns-focus
-		container.find( "[ns-focus]" ).filter( ":first" ).focus();
 	};
 
 	// Plugin is automatically initialized by adding 'noscript' to the form element.
@@ -169,5 +176,5 @@
 		$( "body" ).find( "form[noscript]" ).noscript();
 	});
 
-}( jQuery ));
+}( jQuery, window, document ));
 
